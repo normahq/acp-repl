@@ -44,8 +44,8 @@ func Command() *cobra.Command {
 			)
 		},
 	}
-	cmd.Flags().StringVar(&sessionModel, "model", "", "session model requested via ACP session/set_model")
-	cmd.Flags().StringVar(&sessionMode, "mode", "", "session mode requested via ACP session/set_mode")
+	cmd.Flags().StringVar(&sessionModel, "model", "", "session model requested via ACP session/set_config_option")
+	cmd.Flags().StringVar(&sessionMode, "mode", "", "session mode requested via ACP session/set_config_option with session/set_mode fallback")
 	cmd.Flags().BoolVar(&debugLogs, "debug", false, "enable debug logging")
 	cmd.PersistentPreRunE = func(_ *cobra.Command, _ []string) error {
 		logLevel := logging.LevelInfo
@@ -57,7 +57,7 @@ func Command() *cobra.Command {
 		}
 		return nil
 	}
-	cmd.Example = "  acp-repl -- opencode acp\n  acp-repl --model openai/gpt-5.4 --mode coding -- opencode acp\n  acp-repl -- gemini --acp"
+	cmd.Example = "  acp-repl -- opencode acp\n  acp-repl --model openai/gpt-5.4 --mode coding -- opencode acp\n  acp-repl -- npx -y @normahq/codex-acp-bridge@latest\n  acp-repl -- npx -y @zed-industries/claude-code-acp@latest\n  acp-repl -- npx -y pi-acp"
 	return cmd
 }
 
