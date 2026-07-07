@@ -84,7 +84,6 @@ jobs:
   publish_npm:
     needs: prepare
     runs-on: ubuntu-latest
-    environment: npm
     permissions:
       contents: read
       id-token: write
