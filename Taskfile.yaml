@@ -1,0 +1,23 @@
+version: '3'
+
+vars:
+  BINARY_NAME: acp-repl
+  MAIN_PATH: ./cmd/acp-repl
+  OUTPUT_DIR: bin
+
+tasks:
+  default:
+    desc: Build acp-repl binary
+    cmds:
+      - mkdir -p {{.OUTPUT_DIR}}
+      - go build -o {{.OUTPUT_DIR}}/{{.BINARY_NAME}} {{.MAIN_PATH}}
+
+  test:
+    desc: Run tests
+    cmds:
+      - go test ./...
+
+  lint:
+    desc: Run golangci-lint
+    cmds:
+      - go tool golangci-lint run ./...
