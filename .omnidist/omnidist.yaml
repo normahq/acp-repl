@@ -6,7 +6,7 @@ profiles:
     readme-path: ./README.md
     version:
       source: fixed
-      fixed: 0.0.5
+      fixed: 0.0.6
     targets:
       - os: darwin
         arch: amd64
