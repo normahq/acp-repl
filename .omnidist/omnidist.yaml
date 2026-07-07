@@ -5,8 +5,7 @@ profiles:
       main: ./cmd/acp-repl
     readme-path: ./README.md
     version:
-      source: fixed
-      fixed: 0.0.8
+      source: git-tag
     targets:
       - os: darwin
         arch: amd64
