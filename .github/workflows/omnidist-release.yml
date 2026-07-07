@@ -29,6 +29,15 @@ jobs:
         run: omnidist --profile 'acp-repl' npm stage
       - name: Verify artifacts
         run: omnidist --profile 'acp-repl' npm verify
+      - name: Package GitHub release assets
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          mkdir -p .omnidist/acp-repl/release
+          tar -czf ".omnidist/acp-repl/release/acp-repl_${version}_darwin_amd64.tar.gz" -C .omnidist/acp-repl/dist/darwin/amd64 acp-repl
+          tar -czf ".omnidist/acp-repl/release/acp-repl_${version}_darwin_arm64.tar.gz" -C .omnidist/acp-repl/dist/darwin/arm64 acp-repl
+          tar -czf ".omnidist/acp-repl/release/acp-repl_${version}_linux_amd64.tar.gz" -C .omnidist/acp-repl/dist/linux/amd64 acp-repl
+          tar -czf ".omnidist/acp-repl/release/acp-repl_${version}_linux_arm64.tar.gz" -C .omnidist/acp-repl/dist/linux/arm64 acp-repl
+          tar -czf ".omnidist/acp-repl/release/acp-repl_${version}_windows_amd64.tar.gz" -C .omnidist/acp-repl/dist/windows/amd64 acp-repl.exe
       - name: Pack staged artifacts
         run: tar -czf omnidist-staged.tgz .omnidist/acp-repl
       - name: Upload staged artifacts
@@ -36,12 +45,40 @@ jobs:
         with:
           name: omnidist-staged
           path: omnidist-staged.tgz
+      - name: Upload GitHub release assets
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: github-release-assets
+          path: .omnidist/acp-repl/release/*
+          if-no-files-found: error
       - name: Upload build artifacts
         uses: actions/upload-artifact@v7.0.1
         with:
           name: dist
           path: .omnidist/acp-repl/dist/**/*
           if-no-files-found: error
+
+  publish_github_release:
+    needs: prepare
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    permissions:
+      contents: write
+    steps:
+      - name: Download GitHub release assets
+        uses: actions/download-artifact@v8.0.1
+        with:
+          name: github-release-assets
+          path: github-release-assets
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "${GITHUB_REF_NAME}" >/dev/null 2>&1; then
+            echo "GitHub release ${GITHUB_REF_NAME} already exists; skipping create."
+          else
+            gh release create "${GITHUB_REF_NAME}" github-release-assets/* --verify-tag --generate-notes
+          fi
 
   publish_npm:
     needs: prepare
