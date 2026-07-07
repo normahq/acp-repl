@@ -1,53 +1,93 @@
 # acp-repl
 
-Chat with any ACP server from a focused terminal REPL.
+[![test](https://github.com/normahq/acp-repl/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/normahq/acp-repl/actions/workflows/test.yml)
+[![lint](https://github.com/normahq/acp-repl/actions/workflows/lint.yml/badge.svg?branch=main)](https://github.com/normahq/acp-repl/actions/workflows/lint.yml)
+[![security](https://github.com/normahq/acp-repl/actions/workflows/security.yml/badge.svg?branch=main)](https://github.com/normahq/acp-repl/actions/workflows/security.yml)
+[![release](https://github.com/normahq/acp-repl/actions/workflows/omnidist-release.yml/badge.svg)](https://github.com/normahq/acp-repl/actions/workflows/omnidist-release.yml)
+[![npm](https://img.shields.io/npm/v/@normahq/acp-repl)](https://www.npmjs.com/package/@normahq/acp-repl)
+[![License](https://img.shields.io/github/license/normahq/acp-repl)](LICENSE)
+[![Version](https://img.shields.io/github/v/tag/normahq/acp-repl?label=version)](https://github.com/normahq/acp-repl/tags)
 
-`acp-repl` runs an interactive REPL against any stdio ACP server command.
+**Talk to ACP agents interactively from your terminal.**
 
-## Installation
+`acp-repl` starts any stdio Agent Client Protocol (ACP) server command and gives
+you a focused terminal REPL for sending prompts, testing sessions, and handling
+permission requests.
 
-Global install (distributed via npm):
+Use it when you want to try an ACP provider directly before embedding it in an
+agent runtime, app, or automation workflow.
 
-```bash
+## What You Get
+
+| Capability | Behavior |
+| --- | --- |
+| Interactive ACP chat | Opens a prompt loop against a stdio ACP server command. |
+| Session setup | Creates an ACP session before the first user turn. |
+| Model selection | Requests a provider model with `--model` when supported. |
+| Mode selection | Requests a provider mode with `--mode` when supported. |
+| Permission handling | Lets you choose from numbered permission options in the terminal. |
+| Quiet lifecycle logs | Keeps REPL output focused unless `--debug` is enabled. |
+| Provider agnostic | Works with OpenCode, Gemini ACP, and any executable that speaks ACP over stdio. |
+
+## Try It
+
+Install globally:
+
+```sh
 npm install -g @normahq/acp-repl@latest
 ```
 
-One-off run with npx (no global install):
+Run once with `npx`:
 
-```bash
+```sh
 npx @normahq/acp-repl@latest -- <acp-server-cmd> [args...]
 ```
 
-## Run
+Start a REPL:
 
-```bash
-acp-repl -- <acp-server-cmd> [args...]
-```
-
-Examples:
-
-```bash
+```sh
 acp-repl -- opencode acp
-acp-repl --model opencode/big-pickle --mode plan -- opencode acp
-acp-repl --debug -- opencode acp
+acp-repl --model openai/gpt-5.4 --mode coding -- opencode acp
+acp-repl --debug -- gemini --acp
 ```
 
-## Flags
+## Provider Commands
 
-- `--model <id>`: call ACP `session/set_model` after session creation (unsupported servers are ignored).
-- `--mode <id>`: call ACP `session/set_mode` after session creation (unsupported servers are ignored).
-- `--debug`: enable debug logs.
+| Provider | Command |
+| --- | --- |
+| OpenCode | `acp-repl -- opencode acp` |
+| OpenCode with model/mode | `acp-repl --model openai/gpt-5.4 --mode coding -- opencode acp` |
+| Gemini ACP | `acp-repl -- gemini --acp` |
+| Generic ACP | `acp-repl -- <acp-server-cmd> [args...]` |
+
+The `--` separator is required. Arguments before `--` are treated as
+`acp-repl` flags; arguments after it are passed to the ACP server command.
 
 ## Interaction
 
-- Type prompts and press Enter to run a turn.
+- Type a prompt and press Enter to run a turn.
 - Type `exit` or `quit` to close the REPL.
 - If ACP permission requests arrive, choose from the numbered options.
+- Use `--debug` when you need REPL lifecycle and inspector diagnostics.
 
-## Notes
+## Use Cases
 
-- `--` is required. Arguments before `--` are rejected.
-- Default logging is quiet for REPL lifecycle messages; use `--debug` to see them.
+- Smoke-test an ACP provider before wiring it into an ADK or custom runtime.
+- Compare model and mode behavior without writing integration code.
+- Reproduce provider permission flows from a terminal.
+- Debug whether a local ACP command can start, initialize, and complete turns.
+
+## Flags
+
+| Flag | Purpose |
+| --- | --- |
+| `--model <id>` | Request a session model via ACP `session/set_model`. |
+| `--mode <id>` | Request a session mode via ACP `session/set_mode`. |
+| `--debug` | Enable debug logs. |
+| `-h`, `--help` | Show command help. |
+
+Unsupported `--model` and `--mode` requests are ignored by servers that do not
+implement those ACP methods.
 
 ## Repository
 
