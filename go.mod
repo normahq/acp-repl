@@ -5,7 +5,7 @@ go 1.26.4
 require (
 	github.com/charmbracelet/glamour v0.10.0
 	github.com/coder/acp-go-sdk v0.13.5
-	github.com/normahq/go-adk-acpagent/v2 v2.0.1
+	github.com/normahq/go-adk-acpagent/v2 v2.1.1
 	github.com/rs/zerolog v1.35.1
 	github.com/spf13/cobra v1.10.2
 	google.golang.org/adk/v2 v2.0.0
