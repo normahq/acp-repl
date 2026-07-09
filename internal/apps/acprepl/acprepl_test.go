@@ -63,6 +63,22 @@ func TestACPThoughtOutput(t *testing.T) {
 	}
 }
 
+func TestACPSessionConfigValuesIncludesReasoningEffort(t *testing.T) {
+	values := acpSessionConfigValues("gpt-5.5", "coding", "high")
+	if len(values) != 3 {
+		t.Fatalf("config values len = %d, want 3: %#v", len(values), values)
+	}
+	if values[0].ID != "model" || values[0].Value != "gpt-5.5" {
+		t.Fatalf("model config = %#v, want model=gpt-5.5", values[0])
+	}
+	if values[1].ID != "mode" || values[1].Value != "coding" {
+		t.Fatalf("mode config = %#v, want mode=coding", values[1])
+	}
+	if values[2].ID != "reasoning_effort" || values[2].Value != "high" {
+		t.Fatalf("reasoning config = %#v, want reasoning_effort=high", values[2])
+	}
+}
+
 func TestACPFunctionCallDetection(t *testing.T) {
 	part := &genai.Part{
 		FunctionCall: &genai.FunctionCall{
@@ -567,7 +583,7 @@ func TestRunREPLRejectsNilStreams(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			err := RunREPL(ctx, workingDir, command, "", "", tc.stdin, tc.stdout, tc.stderr)
+			err := RunREPL(ctx, workingDir, command, "", "", "", tc.stdin, tc.stdout, tc.stderr)
 			if err == nil {
 				t.Fatal("RunREPL() error = nil, want non-nil")
 			}

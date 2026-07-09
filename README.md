@@ -48,6 +48,7 @@ Start a REPL:
 ```sh
 acp-repl -- opencode acp
 acp-repl --model openai/gpt-5.4 --mode coding -- opencode acp
+acp-repl --reasoning-effort high -- npx -y @normahq/codex-acp-bridge@latest
 acp-repl -- npx -y @normahq/codex-acp-bridge@latest
 acp-repl -- npx -y @zed-industries/claude-code-acp@latest
 acp-repl --debug -- npx -y pi-acp
@@ -60,6 +61,7 @@ acp-repl --debug -- npx -y pi-acp
 | OpenCode | `acp-repl -- opencode acp` |
 | OpenCode with model/mode | `acp-repl --model openai/gpt-5.4 --mode coding -- opencode acp` |
 | Codex | `acp-repl -- npx -y @normahq/codex-acp-bridge@latest` |
+| Codex with reasoning effort | `acp-repl --reasoning-effort high -- npx -y @normahq/codex-acp-bridge@latest` |
 | Claude Code | `acp-repl -- npx -y @zed-industries/claude-code-acp@latest` |
 | Pi | `acp-repl -- npx -y pi-acp` |
 | Generic ACP | `acp-repl -- <acp-server-cmd> [args...]` |
@@ -87,6 +89,7 @@ The `--` separator is required. Arguments before `--` are treated as
 | --- | --- |
 | `--model <id>` | Request a session model via ACP `session/set_config_option` config id `model`. |
 | `--mode <id>` | Request a session mode via ACP `session/set_config_option` config id `mode`, with legacy `session/set_mode` fallback. |
+| `--reasoning-effort <effort>` | Request a session reasoning effort via ACP `session/set_config_option` config id `reasoning_effort`. |
 | `--debug` | Enable debug logs. |
 | `-h`, `--help` | Show command help. |
 

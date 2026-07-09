@@ -68,6 +68,7 @@ func RunREPL(
 	command []string,
 	sessionModel string,
 	sessionMode string,
+	reasoningEffort string,
 	stdin io.Reader,
 	stdout io.Writer,
 	stderr io.Writer,
@@ -89,7 +90,7 @@ func RunREPL(
 				Context:           ctx,
 				Name:              "acp_repl_agent",
 				Description:       "Generic ACP REPL tool",
-				SessionConfig:     acpSessionConfigValues(sessionModel, sessionMode),
+				SessionConfig:     acpSessionConfigValues(sessionModel, sessionMode, reasoningEffort),
 				Command:           command,
 				WorkingDir:        workingDir,
 				Stderr:            agentStderr,
@@ -105,13 +106,16 @@ func RunREPL(
 	})
 }
 
-func acpSessionConfigValues(modelName, mode string) []acpagent.SessionConfigValue {
-	values := make([]acpagent.SessionConfigValue, 0, 2)
+func acpSessionConfigValues(modelName, mode string, reasoningEffort string) []acpagent.SessionConfigValue {
+	values := make([]acpagent.SessionConfigValue, 0, 3)
 	if modelName = strings.TrimSpace(modelName); modelName != "" {
 		values = append(values, acpagent.SessionConfigValue{ID: "model", Value: modelName})
 	}
 	if mode = strings.TrimSpace(mode); mode != "" {
 		values = append(values, acpagent.SessionConfigValue{ID: "mode", Value: mode})
+	}
+	if reasoningEffort = strings.TrimSpace(reasoningEffort); reasoningEffort != "" {
+		values = append(values, acpagent.SessionConfigValue{ID: "reasoning_effort", Value: reasoningEffort})
 	}
 	return values
 }

@@ -13,10 +13,11 @@ import (
 func Command() *cobra.Command {
 	var sessionModel string
 	var sessionMode string
+	var reasoningEffort string
 	var debugLogs bool
 
 	cmd := &cobra.Command{
-		Use:          "acp-repl [--model <model>] [--mode <mode>] -- <acp-server-cmd> [args...]",
+		Use:          "acp-repl [--model <model>] [--mode <mode>] [--reasoning-effort <effort>] -- <acp-server-cmd> [args...]",
 		Short:        "Run an interactive REPL against any stdio ACP server command",
 		Long:         "Start a stdio ACP server command and run an interactive terminal REPL over ACP.",
 		SilenceUsage: true,
@@ -38,6 +39,7 @@ func Command() *cobra.Command {
 				acpCommand,
 				sessionModel,
 				sessionMode,
+				reasoningEffort,
 				cmd.InOrStdin(),
 				cmd.OutOrStdout(),
 				cmd.ErrOrStderr(),
@@ -46,6 +48,7 @@ func Command() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&sessionModel, "model", "", "session model requested via ACP session/set_config_option")
 	cmd.Flags().StringVar(&sessionMode, "mode", "", "session mode requested via ACP session/set_config_option with session/set_mode fallback")
+	cmd.Flags().StringVar(&reasoningEffort, "reasoning-effort", "", "session reasoning effort requested via ACP session/set_config_option")
 	cmd.Flags().BoolVar(&debugLogs, "debug", false, "enable debug logging")
 	cmd.PersistentPreRunE = func(_ *cobra.Command, _ []string) error {
 		logLevel := logging.LevelInfo
@@ -57,7 +60,7 @@ func Command() *cobra.Command {
 		}
 		return nil
 	}
-	cmd.Example = "  acp-repl -- opencode acp\n  acp-repl --model openai/gpt-5.4 --mode coding -- opencode acp\n  acp-repl -- npx -y @normahq/codex-acp-bridge@latest\n  acp-repl -- npx -y @zed-industries/claude-code-acp@latest\n  acp-repl -- npx -y pi-acp"
+	cmd.Example = "  acp-repl -- opencode acp\n  acp-repl --model openai/gpt-5.4 --mode coding -- opencode acp\n  acp-repl --reasoning-effort high -- npx -y @normahq/codex-acp-bridge@latest\n  acp-repl -- npx -y @zed-industries/claude-code-acp@latest\n  acp-repl -- npx -y pi-acp"
 	return cmd
 }
 
